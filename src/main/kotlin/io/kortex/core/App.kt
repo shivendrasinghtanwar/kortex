@@ -13,7 +13,7 @@ import java.util.*
 
 var vertx: Vertx = Vertx.vertx()
 val locale: Locale = Locale.ENGLISH
-private const val publicKey = "f59a5e8974afa89cf98089077ef3cb31d7b53642c0e2ed3a759cd043a0ff007f" //secretStateTessinBillte in SHA256
+private const val publicKey = "d48e9d2d0559a38f848dc6a0b534c545131b0c2d0b504a96d1187a1fb498f171" //vertxPlusKotlinIsKortex in SHA256
 val jwtAuthOptions = jwtAuthOptionsOf(
   pubSecKeys = listOf(
     pubSecKeyOptionsOf(
