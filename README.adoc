@@ -1,8 +1,13 @@
-= Core
+= Kortex
 
 image:https://img.shields.io/badge/vert.x-3.9.3-purple.svg[link="https://vertx.io"]
 
-This application was generated using http://start.vertx.io
+This is simple and easy to use boiler plate code for developing REST API in Vert.x using Kotlin with Mongo as your database.
+
+Will try to follow all the available best practices and optimizations to make this better.
+
+Suggestions are always welcome.
+
 
 == Building
 
