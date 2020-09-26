@@ -3,7 +3,7 @@ package io.kortex.core
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Promise
 
-class MainVerticle : AbstractVerticle() {
+class Server : AbstractVerticle() {
 
   override fun start(startPromise: Promise<Void>) {
     vertx

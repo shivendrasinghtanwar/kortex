@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+  <property name="LOG_PATH" value="${user.home}/kortex/Logs" />
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>%d{yyyy-MM-dd HH:mm:ss} | [%thread] %-5level %logger{48} - %msg%n</Pattern>
+    </encoder>
+  </appender>
+  <property name="LOG_FILE" value="LogFile" />
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_PATH}/${LOG_FILE}.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- daily rollover -->
+      <fileNamePattern>${LOG_PATH}/${LOG_FILE}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+
+      <!-- keep 30 days' worth of history capped at 3GB total size -->
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%-4relative [%thread] %-5level %logger{48} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+<!--    <appender-ref ref="FILE" />-->
+  </root>
+
+  <!--<root level="debug">
+    <appender-ref ref="STDOUT" />
+  </root>-->
+
+</configuration>
