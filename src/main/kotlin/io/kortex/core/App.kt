@@ -1,5 +1,6 @@
 package io.kortex.core
 
+import io.kortex.core.utils.LoggerUtils.Companion.enter
 import io.kortex.core.utils.LoggerUtils.Companion.errorLog
 import io.vertx.core.Vertx
 import io.vertx.core.logging.Logger
@@ -9,6 +10,7 @@ import io.vertx.ext.auth.jwt.JWTAuth
 import io.vertx.kotlin.ext.auth.jwt.jwtAuthOptionsOf
 import io.vertx.kotlin.ext.auth.pubSecKeyOptionsOf
 import java.util.*
+import kotlin.system.exitProcess
 
 
 var vertx: Vertx = Vertx.vertx()
@@ -32,6 +34,33 @@ fun main(args: Array<String>){
   logger =  LoggerFactory.getLogger("App.kt")
 
   vertx.exceptionHandler { logger.error(errorLog(it)) }
+
+
+  //read environment provided from command line arguments, defaults to production environment configuration
+  val env = if(args.isNotEmpty()) args[0] else "local"
+
+  //Retrieve Configuration for project
+  val configFuture = Configuration.init(env).future()
+
+
+  configFuture
+    .onSuccess{ launchVerticles() }
+    .onFailure{
+      logger.error(errorLog(it))
+      exitProcess(1)
+    }
+
+}
+
+private fun launchVerticles() {
+  logger.info(enter())
+  /* Launch verticles here*/
+
+  // Data Services
+
+
+  // Services
+
 
   // Launch Server
   vertx.deployVerticle(Server())
