@@ -1,0 +1,20 @@
+{
+  "env": "local",
+
+  "local": {
+    "fileUploadsDir": "path/for/fileUploads",
+    "backendURL": "localhost:8888",
+    "mongodb": {
+      "db_name": "Kortex",
+      "useObjectId": true,
+      "host": "localhost",
+      "archiveDbName": "KortexArchive"
+    },
+    "mail": {
+      "hostname": "127.0.0.1",
+      "port": 2525,
+      "username": "",
+      "password": ""
+    }
+  }
+}

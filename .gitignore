@@ -2,7 +2,6 @@
 .vertx/
 
 ### Eclipse ###
-
 .metadata
 bin/
 tmp/
@@ -183,3 +182,6 @@ nbdist/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+
+/src/config/config.json
