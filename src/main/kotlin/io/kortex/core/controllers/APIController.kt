@@ -8,7 +8,16 @@ import kotlinx.coroutines.launch
 fun getAPI(ctx:RoutingContext) = GlobalScope.launch {
   val responder = Responder(ctx)
   try{
+    responder.success()
+  }catch (e:Exception){
+    responder.error(e)
+  }
+}
 
+fun postAPI(ctx:RoutingContext) = GlobalScope.launch {
+  val responder = Responder(ctx)
+  try{
+    responder.success()
   }catch (e:Exception){
     responder.error(e)
   }

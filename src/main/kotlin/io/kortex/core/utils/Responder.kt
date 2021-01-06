@@ -13,7 +13,7 @@ class Responder(var ctx: RoutingContext) {
   private var response = JsonObject()
   private val logger = LoggerFactory.getLogger(this::class.java)
   //Success Functions
-  private fun success(){
+  fun success(){
     logger.info(enter())
     ctx
       .response()

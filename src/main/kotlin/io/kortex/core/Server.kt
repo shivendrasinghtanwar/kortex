@@ -1,6 +1,7 @@
 package io.kortex.core
 
 import io.kortex.core.controllers.getAPI
+import io.kortex.core.controllers.postAPI
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Promise
 import io.vertx.core.http.HttpMethod
@@ -16,14 +17,53 @@ class Server : AbstractVerticle() {
   private val logger = LoggerFactory.getLogger(this::class.java)
   override fun start(startPromise: Promise<Void>) {
 
-    // Setup router
+    // Initialize router
     val router = Router.router(vertx)
-
     // Global router setup options
+    globalRouterSettings(router)
+    // Static handler (For serving static files directly)
+    setupStaticRoute(router)
+
+    /**
+     *  -------------------------------- API Routes ---------------------------------
+     */
+    // GET
+    getRoutes(router)
+    // POST
+    postRoutes(router)
+
+    /**
+     *  -------------------------------- Starting Server ---------------------------------
+     */
+    vertx
+      .createHttpServer(HttpServerOptions().setLogActivity(true))
+      .requestHandler(router)
+      .listen(serverPort) { http ->
+        if (http.succeeded()) {
+          startPromise.complete()
+          logger.info("[SERVER STARTED] HTTP server started on port - $serverPort")
+        }
+        else startPromise.fail(http.cause())
+      }
+  }
+
+  private fun getRoutes(router: Router){
+    router.route(HttpMethod.GET,"/get-api").handler{getAPI(it)}
+  }
+  private fun postRoutes(router: Router){
+    router.route(HttpMethod.POST,"/post-api").handler{postAPI(it)}
+  }
+
+  private fun globalRouterSettings(router: Router){
+
+    // For logging the API calls
     router.route("/*").handler(ResponseTimeHandler.create())
     router.route("/*").handler(LoggerHandler.create())
+
+    // For accepting body in post and put requests
     router.route(HttpMethod.POST,"/*").handler(BodyHandler.create())
     router.route(HttpMethod.PUT,"/*").handler(BodyHandler.create())
+
     // CORS configuration
     router.route().handler(CorsHandler.create("*")
       .allowedMethods(
@@ -45,30 +85,12 @@ class Server : AbstractVerticle() {
         )
       )
     )
-    //Static handler
+  }
+
+  private fun setupStaticRoute(router: Router){
     val staticHandler = StaticHandler.create()
     staticHandler.setAllowRootFileSystemAccess(true)
     staticHandler.setWebRoot(Configuration.fileUploadsDir)
     router.route("/static/*").handler(staticHandler)
-    val options = HttpServerOptions().setLogActivity(true)
-
-    /**
-     *  -------------------------------- API Routes ---------------------------------
-     */
-    router.route(HttpMethod.GET,"/get-api").handler{getAPI(it)}
-
-    /**
-     *  -------------------------------- Starting Server ---------------------------------
-     */
-    vertx
-      .createHttpServer(options)
-      .requestHandler(router)
-      .listen(serverPort) { http ->
-        if (http.succeeded()) {
-          startPromise.complete()
-          logger.info("[SERVER STARTED] HTTP server started on port - $serverPort")
-        }
-        else startPromise.fail(http.cause())
-      }
   }
 }

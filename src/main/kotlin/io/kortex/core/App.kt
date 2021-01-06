@@ -35,10 +35,6 @@ fun main(args: Array<String>){
 
   vertx.exceptionHandler { logger.error(errorLog(it)) }
 
-
-  //read environment provided from command line arguments, defaults to production environment configuration
-  val env = if(args.isNotEmpty()) args[0] else "local"
-
   //Retrieve Configuration for project
   val configFuture = Configuration.init().future()
 
