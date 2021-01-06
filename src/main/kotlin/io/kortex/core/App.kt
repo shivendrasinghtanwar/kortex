@@ -40,13 +40,14 @@ fun main(args: Array<String>){
   val env = if(args.isNotEmpty()) args[0] else "local"
 
   //Retrieve Configuration for project
-  val configFuture = Configuration.init(env).future()
+  val configFuture = Configuration.init().future()
 
 
   configFuture
     .onSuccess{ launchVerticles() }
     .onFailure{
       logger.error(errorLog(it))
+      logger.error("!! Please check your configuration file at -> ${Configuration.configFilePath} !!")
       exitProcess(1)
     }
 

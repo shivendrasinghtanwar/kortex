@@ -19,13 +19,12 @@ object Configuration{
   lateinit var fileUploadsDir: String
   lateinit var mongoConfig: JsonObject
   lateinit var mailConfig: JsonObject
-  private const val configFilePath = "src/config/config.json"
+  const val configFilePath = "src/config/config.json"
 
-  fun init(environment: String):Promise<Void>{
+  fun init():Promise<Void>{
     logger.info(enter())
     val promise = Promise.promise<Void>()
     if(::config.isInitialized) config = JsonObject()
-    this.environment = environment
 
     val envOptions = ConfigStoreOptions().setType("env")
     val fileStoreOptions = ConfigStoreOptions().setType("file")
@@ -37,28 +36,28 @@ object Configuration{
 
     configRetriever.getConfig { result->
       if(result.succeeded()) {
-        //default config is picked up from production tag
-        val defaultConf = result.result().getJsonObject("local")
 
-        //then provided environment tag is merged with default config
-        //for e.g. suppose apiUrl = production.url in 'production' config
-        //and you want to change this for local environment
-        //just create entry under 'local' tag i.e. apiUrl = local.url
-        //and provide 'local' while calling init and local url will take precedence over production url
-        val envSpecificConf = if(environment=="local") JsonObject() else result.result().getJsonObject(environment)
-        when {
-          envSpecificConf==null -> promise.fail("No configuration found for given environment --> $environment")
-          defaultConf==null -> promise.fail("local conf cannot be null. Review your conf file --> $configFilePath")
-          else -> {
-            defaultConf.map.putAll(envSpecificConf.map)
-            config = defaultConf
-            initializeBasicMembers()
-            logger.info(success())
-            promise.complete()
+        val rawConfig = result.result()
+
+        if(rawConfig.containsKey("env")){
+          environment = rawConfig.getString("env")
+
+          when (val envSpecificConf = result.result().getJsonObject(environment)) {
+              null -> promise.fail("No configuration found for given environment --> $environment")
+              else -> {
+                config = envSpecificConf
+                logger.info("Retrieved Configuration --")
+                logger.info(config.encodePrettily())
+                initializeBasicMembers()
+                logger.info(success())
+                promise.complete()
+              }
           }
+
         }
+        else promise.fail("Environment Not found!!")
       }else{
-        promise.fail("Maybe check your configuration file at the path? --> $configFilePath")
+        promise.fail(result.cause())
       }
     }
     return promise

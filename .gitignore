@@ -185,3 +185,4 @@ nbdist/
 
 
 /src/config/config.json
+build/
