@@ -5,7 +5,7 @@ import io.kortex.core.enums.DataBusMessages
 import io.kortex.core.enums.ErrorMessages
 import io.kortex.core.locale
 import io.kortex.core.utils.LoggerUtils.Companion.enter
-import io.kortex.core.utils.LoggerUtils.Companion.errorLog
+import io.kortex.core.utils.LoggerUtils.Companion.logException
 import io.kortex.core.vertx
 import io.vertx.core.Promise
 import io.vertx.core.json.JsonArray
@@ -36,7 +36,7 @@ open class DataMiddleware {
         promise.complete(find.result().body())
       }else
       {
-        logger.error(errorLog(find.cause()))
+        logger.error(logException(find.cause()))
         promise.fail(find.cause())
       }
     }
@@ -60,7 +60,7 @@ open class DataMiddleware {
         promise.complete(find.result().body())
       }else
       {
-        logger.error(errorLog(find.cause()))
+        logger.error(logException(find.cause()))
         promise.fail(find.cause())
       }
     }
@@ -78,7 +78,7 @@ open class DataMiddleware {
         else promise.fail(ErrorMessages.NotFound.get(locale))
       }else
       {
-        logger.error(errorLog(find.cause()))
+        logger.error(logException(find.cause()))
         promise.fail(find.cause())
       }
     }
@@ -93,7 +93,7 @@ open class DataMiddleware {
     vertx.eventBus().request<String>(DataBusMessages.Insert.into(collection), data){
       if(it.succeeded()) promise.complete(it.result().body())
       else{
-        logger.error(errorLog(it.cause()))
+        logger.error(logException(it.cause()))
         promise.fail(it.cause())
       }
     }
@@ -108,7 +108,7 @@ open class DataMiddleware {
     vertx.eventBus().request<Long>(DataBusMessages.DeleteById.from(collection), id){
       if(it.succeeded()) promise.complete(it.result().body())
       else{
-        logger.error(errorLog(it.cause()))
+        logger.error(logException(it.cause()))
         promise.fail(it.cause())
       }
     }
@@ -126,7 +126,7 @@ open class DataMiddleware {
     vertx.eventBus().request<Long>(DataBusMessages.UpdateById.from(collection), data){
       if(it.succeeded()) promise.complete(it.result().body())
       else{
-        logger.error(errorLog(it.cause()))
+        logger.error(logException(it.cause()))
         promise.fail(it.cause())
       }
     }
@@ -143,7 +143,7 @@ open class DataMiddleware {
     vertx.eventBus().request<Long>(DataBusMessages.Count.from(collection), data){
       if(it.succeeded()) promise.complete(it.result().body())
       else{
-        logger.error(errorLog(it.cause()))
+        logger.error(logException(it.cause()))
         promise.fail(it.cause())
       }
     }

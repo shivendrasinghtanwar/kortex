@@ -1,7 +1,7 @@
 package io.kortex.core
 
 import io.kortex.core.utils.LoggerUtils.Companion.enter
-import io.kortex.core.utils.LoggerUtils.Companion.errorLog
+import io.kortex.core.utils.LoggerUtils.Companion.logException
 import io.vertx.core.Vertx
 import io.vertx.core.logging.Logger
 import io.vertx.core.logging.LoggerFactory
@@ -33,7 +33,7 @@ fun main(args: Array<String>){
   LoggerFactory.initialise()
   logger =  LoggerFactory.getLogger("App.kt")
 
-  vertx.exceptionHandler { logger.error(errorLog(it)) }
+  vertx.exceptionHandler { logger.error(logException(it)) }
 
   //Retrieve Configuration for project
   val configFuture = Configuration.init().future()
@@ -42,7 +42,7 @@ fun main(args: Array<String>){
   configFuture
     .onSuccess{ launchVerticles() }
     .onFailure{
-      logger.error(errorLog(it))
+      logger.error(logException(it))
       logger.error("!! Please check your configuration file at -> ${Configuration.configFilePath} !!")
       exitProcess(1)
     }

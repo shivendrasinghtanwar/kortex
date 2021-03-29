@@ -1,7 +1,7 @@
 package io.kortex.core
 
 import io.kortex.core.utils.LoggerUtils.Companion.enter
-import io.kortex.core.utils.LoggerUtils.Companion.errorLog
+import io.kortex.core.utils.LoggerUtils.Companion.logException
 import io.kortex.core.utils.LoggerUtils.Companion.success
 import io.vertx.config.ConfigRetriever
 import io.vertx.config.ConfigRetrieverOptions
@@ -70,7 +70,7 @@ object Configuration{
       mongoConfig = config.getJsonObject("mongodb")
       mailConfig = config.getJsonObject("mail")
     }catch (e:Exception){
-      logger.error(errorLog(e))
+      logger.error(logException(e))
     }
   }
 }

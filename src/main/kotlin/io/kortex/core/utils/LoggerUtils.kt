@@ -4,11 +4,11 @@ import io.vertx.core.json.JsonObject
 
 class LoggerUtils {
   companion object{
-    fun errorLog(errorMessage: String?):String{
+    fun logException(errorMessage: String?):String{
       println(Thread.currentThread().stackTrace)
       return "[ERROR] - $errorMessage"
     }
-    fun errorLog(errorMessage: Throwable):String{
+    fun logException(errorMessage: Throwable):String{
       errorMessage.printStackTrace()
       return "[ERROR] - ${errorMessage.message}"
     }

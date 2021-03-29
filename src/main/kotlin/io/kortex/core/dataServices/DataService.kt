@@ -5,7 +5,7 @@ import io.kortex.core.enums.CollectionNames
 import io.kortex.core.enums.DataBusMessages
 import io.kortex.core.utils.LoggerUtils.Companion.deployed
 import io.kortex.core.utils.LoggerUtils.Companion.enter
-import io.kortex.core.utils.LoggerUtils.Companion.errorLog
+import io.kortex.core.utils.LoggerUtils.Companion.logException
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.eventbus.Message
 import io.vertx.core.json.JsonArray
@@ -44,7 +44,7 @@ open class DataService: AbstractVerticle() {
       if(res.succeeded()) {
         message.reply(res.result())
       } else {
-        logger.error(errorLog(res.cause()))
+        logger.error(logException(res.cause()))
         message.fail(1, res.cause().message)
       }
     }
@@ -73,7 +73,7 @@ open class DataService: AbstractVerticle() {
     mongo.findWithOptions(collection.name, query, options) { h ->
       if (h.succeeded()) message.reply(JsonArray(h.result()))
       else {
-        logger.error(errorLog(h.cause()))
+        logger.error(logException(h.cause()))
         message.fail(1, h.cause().message)
       }
     }
@@ -104,7 +104,7 @@ open class DataService: AbstractVerticle() {
     mongo.removeDocument(collection.name, query) { deleteRecord ->
       if (deleteRecord.succeeded()) message.reply(deleteRecord.result().removedCount)
       else {
-        logger.error(errorLog(deleteRecord.cause()))
+        logger.error(logException(deleteRecord.cause()))
         message.fail(1,deleteRecord.cause().message)
       }
     }
